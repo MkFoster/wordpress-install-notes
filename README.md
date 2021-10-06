@@ -135,3 +135,59 @@ GRANT ALL PRIVILEGES ON `example-wp-db`.* TO "example-wp-user"@"localhost";
 FLUSH PRIVILEGES;
 exit
 ```
+* Download and unzip the WordPress install and create an empty .htaccess file for later use.
+```
+cd /tmp
+wget https://wordpress.org/latest.tar.gz
+tar xzvf latest.tar.gz
+touch /tmp/wordpress/.htaccess
+```
+* Create and edit the Wordpress Config
+```
+cp /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php
+mkdir /tmp/wordpress/wp-content/upgrade #So WordPress can upgrade later
+```
+* Copy the WordPress folder contents to the web server document root and update the permissions
+```
+sudo cp -a /tmp/wordpress/. /var/www/example.com
+sudo chown -R www-data:www-data /var/www/example.com
+#sudo find /var/www/example.com/ -type d -exec chmod 750 {} \;
+#sudo find /var/www/example.com/ -type f -exec chmod 640 {} \;
+```
+* Edit the WordPress Config File
+```
+sudo nano /var/www/example.com/wp-config.php
+```
+** Set DB_NAME to 'example-wp-db'.
+** Set DB_USER to 'example-wp-user'.
+** Set DB_PASSWORD to the password you previously defined.
+** Add a new line below to the end of the config to set the filesystem access method to direct so WP doesn't prompt for FTP credentials when performing some actions.
+```
+define('FS_METHOD', 'direct');
+```
+** Use the WordPress.org secret key API to create key and salt values for:
+*** AUTH_KEY
+*** SECURE_AUTH_KEY
+*** LOGGED_IN_KEY
+*** NONCE_KEY
+*** AUTH_SALT
+*** SECURE_AUTH_SALT
+*** LOGGED_IN_SALT
+*** NONCE_SALT
+** Copy and paste the key and salt values into the wp-config.php
+** Save the file (CTRL-X)
+* Go to the site URL/IP and configure it
+** Set a Site Title
+** Username (I.e., jdoe)
+** Password yourawesomepassword
+** Email
+## Enable SSL with Let's Encrypt/Certbot
+* Verify your firewall and/or security group settings allow HTTPS/443 TCP inbound traffic
+* Install and run certbot and python3-certbot-apache
+```
+sudo apt install certbot python3-certbot-apache
+sudo certbot --apache
+```
+Provide an email address, agree to the terms, use "1,2" to protect both names, and choose "2" to do the redirect.
+## Plugins need for a 100% Lighthouse Score
+* Autoptimize - Makes your site faster by optimizing CSS, JS, Images, Google fonts and more. - Must enable optimization/aggregation of JavaScript, CSS, and HTML.
