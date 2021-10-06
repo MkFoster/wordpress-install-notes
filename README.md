@@ -1,7 +1,9 @@
 # wordpress-install-notes
-My abbreviated step-by-step notes to install WordPress on an Ubuntu 20 LTS system.  Note: Replace **example.com** with your own domain.
+This is my abbreviated step-by-step notes on how to install WordPress on an Ubuntu 20 LTS system.  Note: Replace **example.com** with your own domain where applicable.
 
-Take a look at these two great articles on Digital Ocean for more in-depth coverage (where I learned from):
+![alt text](https://upload.wikimedia.org/wikipedia/commons/2/20/WordPress_logo.svg)
+
+These two articles on Digital Ocean were super-helpful the first time I did this on Ubuntu:
 * [How To Install Linux, Apache, MySQL, PHP (LAMP) stack on Ubuntu 20.04 by Erika Heidi](https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu-20-04)
 * [How To Install WordPress on Ubuntu 20.04 with a LAMP Stack by Lisa Tagliaferri](https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-on-ubuntu-20-04-with-a-lamp-stack)
 
