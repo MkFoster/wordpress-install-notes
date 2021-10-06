@@ -9,9 +9,9 @@ These two articles on Digital Ocean were super-helpful the first time I did this
 
 ## Get a an Ubuntu 20 LTS instance
 
-Ubuntu with WordPress runs great on Arm64 systems like Amazon's Graviton EC2 instances
+Note: WordPress runs great on Arm64 systems like Amazon's Graviton EC2 instances and use less power.
 
-Here's a list of service providers where you can get an Ubuntu 20 LTS VPC up and running quickly
+Here's a list of service providers where you can get an Ubuntu 20 LTS instance up and running quickly
 * [Amazon EC2 Graviton Arm64 instances I.e., M6g and T4g](https://aws.amazon.com/ec2/graviton/)
 * [Amazon EC2 x86 instances](https://aws.amazon.com/ec2)
 * [Amazon Lightsail](https://aws.amazon.com/lightsail/)
@@ -20,17 +20,19 @@ Here's a list of service providers where you can get an Ubuntu 20 LTS VPC up and
 * Nearly any place that offer VPS hosting
 
 ## Setup the LAMP (Linux/Apache/MySQL/PHP) Stack
-These instructions assume your Ubuntu 20 LTS instance is up and running and you are sitting at a command prompt.
+These instructions assume your Ubuntu 20 LTS instance is up and running and you are logged-in, sitting at a shell prompt via Putty or some other SSH client.
 
-* Do an apt update: `sudo apt update && sudo apt upgrade -y`
-* Install Apache: `sudo apt install apache2`
+* Do an apt update:
+```sudo apt update && sudo apt upgrade -y```
+* Install Apache:
+```sudo apt install apache2```
 * If you don't have a firewall in front of your instance, enable the Ubuntu firewall:
 ```
 sudo ufw allow in "Apache Full"
 sudo ufw allow OpenSSH
 sudo ufw enable
 ```
-* Reboot the instance and check the firewall status
+* Reboot the instance and check the firewall status:
 ```
 sudo ufw status
 
@@ -49,7 +51,7 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 sudo apt install mysql-server
 sudo mysql_secure_installation
 ```
-* Select options to enforce strong passwords.  Choose 'y' for "VALIDATE PASSWORD COMPONENT" and press '2" for "STRONG".  Use a strong password for the DB root user.  A password generator might come in handy here.  Choose 'y' to remove anonymous users, disallow root login remotely, remove the test DB, and  reload the privilege tables.
+* Select options to enforce strong passwords.  Choose 'y' for "VALIDATE PASSWORD COMPONENT" and press '2" for "STRONG".  Use a strong password for the DB root user and put it somewhere safe.  A password manager like 1Password or LastPass is a good place.  Choose 'y' to remove anonymous users, disallow root login remotely, remove the test DB, and  reload the privilege tables.
 
 * Install PHP.  Note: Do not install Imagemagick because it has a bug that crashes the server on large image uploads.
 ```
@@ -84,7 +86,7 @@ sudo nano /etc/apache2/sites-available/example.com.conf
 </VirtualHost>
 
 <Directory /var/www/example.com/>
-		AllowOverride All
+    AllowOverride All
 </Directory>
 ```
 * Enable the new virtual host, disable the old default website, test the config, and reload Apache.
@@ -103,7 +105,7 @@ Here is a simple HTML document you can copy paste to Nano to test with.
 ```
 <html>
   <head>
-    <title>magicby.design website</title>
+    <title>example.com website</title>
   </head>
   <body>
     <h1>Hello World!</h1>
@@ -160,29 +162,27 @@ sudo chown -R www-data:www-data /var/www/example.com
 ```
 sudo nano /var/www/example.com/wp-config.php
 ```
-** Set DB_NAME to 'example-wp-db'.
-** Set DB_USER to 'example-wp-user'.
-** Set DB_PASSWORD to the password you previously defined.
-** Add a new line below to the end of the config to set the filesystem access method to direct so WP doesn't prompt for FTP credentials when performing some actions.
+* Set DB_NAME to 'example-wp-db'.
+* Set DB_USER to 'example-wp-user'.
+* Set DB_PASSWORD to the password you previously defined.
+* Add a new line below to the end of the config to set the filesystem access method to direct so WP doesn't prompt for FTP credentials when performing some actions.
 ```
 define('FS_METHOD', 'direct');
 ```
-** Use the WordPress.org secret key API to create key and salt values for:
-*** AUTH_KEY
-*** SECURE_AUTH_KEY
-*** LOGGED_IN_KEY
-*** NONCE_KEY
-*** AUTH_SALT
-*** SECURE_AUTH_SALT
-*** LOGGED_IN_SALT
-*** NONCE_SALT
-** Copy and paste the key and salt values into the wp-config.php
-** Save the file (CTRL-X)
-* Go to the site URL/IP and configure it
-** Set a Site Title
-** Username (I.e., jdoe)
-** Password yourawesomepassword
-** Email
+* Use the WordPress.org secret key API to create key and salt values for:
+```
+AUTH_KEY
+SECURE_AUTH_KEY
+LOGGED_IN_KEY
+NONCE_KEY
+AUTH_SALT
+SECURE_AUTH_SALT
+LOGGED_IN_SALT
+NONCE_SALT
+```
+* Copy and paste the key and salt values into the wp-config.php
+* Save the file (CTRL-X)
+* Load the site URL/IP in your browser and configure it.  Set a Site Title, Username (I.e., jdoe), Password, and Email
 ## Enable SSL with Let's Encrypt/Certbot
 * Verify your firewall and/or security group settings allow HTTPS/443 TCP inbound traffic
 * Install and run certbot and python3-certbot-apache
